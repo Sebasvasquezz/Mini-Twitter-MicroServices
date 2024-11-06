@@ -1,4 +1,4 @@
-# MIMI-TWITTER
+# MINI-TWITTER
 
 
 This "Mini Twitter" application is a REST API developed in Java using Quarkus, allowing users to create posts of up to 140 characters and associate them with thematic "threads" or "streams." It includes entities such as User, Post, and Stream, managed through JPA and Panache repositories. The API exposes endpoints for creating and listing users, posts, and streams, while a simple HTML interface allows interaction with the application, enabling users to create and view posts grouped by thread. JavaScript is used to handle data loading and submission operations, providing an intuitive and visually pleasant experience for users.
