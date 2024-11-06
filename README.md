@@ -62,7 +62,7 @@ You need to install the following tools and configure their dependencies:
     cd Mini-twitter-microservices
     ```
 
-2. Build the Spring Boot backend:
+2. Build the backend:
     ```sh
     mvn clean package
     ```
@@ -72,7 +72,7 @@ You need to install the following tools and configure their dependencies:
 To run the backend and frontend, follow these steps:
 
 
-1. **Run the Spring Boot backend:**
+1. **Run the backend:**
     ```sh
     mvn quarkus:dev
     ```
