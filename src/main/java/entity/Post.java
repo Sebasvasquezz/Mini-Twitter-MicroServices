@@ -5,6 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents a social media post within the application.
+ * This entity maps to the "posts" table in the database.
+ */
 @Entity
 @Table(name = "posts")
 public class Post {
@@ -14,9 +18,9 @@ public class Post {
 
     @NotBlank 
     @Column(length = 140, nullable = false)
-    private String contenido;
+    private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Asegura la carga del Usuario al obtener el Post
+    @ManyToOne(fetch = FetchType.LAZY) 
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -24,26 +28,27 @@ public class Post {
     @JoinColumn(name = "stream_id", nullable = true)
     private Stream stream;
 
-    private LocalDateTime fechaCreacion;
+    private LocalDateTime creationDate;
 
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
+    // Getters y setters
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Long getId() {
         return id;
     }
 
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
+    public LocalDateTime getCreationDate() {
+        return creationDate;
     }
 
-    public String getContenido() {
-        return contenido;
+    public String getContent() {
+        return content;
     }
 
-    public void setContenido(String contenido) {
-        this.contenido = contenido;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public void setUser(User user) {

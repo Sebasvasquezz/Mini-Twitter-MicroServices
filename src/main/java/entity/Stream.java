@@ -3,6 +3,10 @@ package entity;
 import jakarta.persistence.*;
 import java.util.List;
 
+/**
+ * Represents a stream or thread of posts within the application.
+ * This entity maps to the "streams" table in the database.
+ */
 @Entity
 @Table(name = "streams")
 public class Stream {
@@ -11,11 +15,12 @@ public class Stream {
     private Long id;
     
     @Column(unique = true, nullable = false)
-    private String titulo;
+    private String title;
 
     @OneToMany(mappedBy = "stream", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts;
-
+    
+    // Getters y setters
     public Long getId() {
         return id;
     }
@@ -24,12 +29,12 @@ public class Stream {
         this.id = id;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public List<Post> getPosts() {
@@ -40,6 +45,6 @@ public class Stream {
         this.posts = posts;
     }
 
-    // Getters y setters
+
 }
 

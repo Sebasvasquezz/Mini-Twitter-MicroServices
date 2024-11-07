@@ -17,7 +17,8 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts;
-
+    
+    // Getters y setters
     public String getUsername() {
         return username;
     }

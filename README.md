@@ -66,11 +66,53 @@ You need to install the following tools and configure their dependencies:
     ```sh
     mvn clean package
     ```
+## Testing the Application
+
+The resources in this project (`UserResource`, `StreamResource`, and `PostResource`) are tested using JUnit and Mockito. Each resource has specific tests to verify that they function as expected. Below is a description of the tests for each resource.
+
+### UserResource Tests
+
+The `UserResource` class has two endpoints:
+1. `GET /usuarios`: Lists all users.
+2. `POST /usuarios`: Creates a new user.
+
+#### Test Cases
+- **testListUsers**: This test verifies that the `list()` method returns a list of users. We mock the `UserRepository` to return a predefined list of users and check that the returned list matches the expected data.
+- **testCreateUser**: This test verifies that the `create()` method correctly persists a user. We create a mock user and call `create()`. We then use `verify` to ensure that `persist()` is called with the correct user.
+
+### StreamResource Tests
+
+The `StreamResource` class has two endpoints:
+1. `GET /streams`: Lists all streams.
+2. `POST /streams`: Creates a new stream.
+
+#### Test Cases
+- **testListStreams**: This test checks that the `list()` method returns a list of streams. The `StreamRepository` is mocked to return a predefined list of streams, and the test checks if the returned list matches the expected data.
+- **testCreateStream**: This test verifies that the `create()` method correctly persists a stream. We create a mock stream and call `create()`. Using `verify`, we check that `persist()` was called with the correct stream.
+
+### PostResource Tests
+
+The `PostResource` class has two endpoints:
+1. `GET /posts`: Lists all posts.
+2. `POST /posts`: Creates a new post with user and stream association.
+
+#### Test Cases
+- **testListPosts**: This test verifies that the `list()` method returns a list of posts with the correct data. We mock `PostRepository` to return a list of predefined posts, and the test ensures that the returned data matches the expected values.
+- **testCreatePost_Success**: This test checks that the `create()` method correctly associates a post with a user and stream, and then persists it. Mock data is used for `UserRepository` and `StreamRepository` to find existing users and streams, and `PostRepository` is used to verify persistence.
+
+### Running Tests
+
+To run all tests, use the following command:
+
+```bash
+mvn test
+```
+
+And you should get:
+![alt text](images/tests.png)
+
 
 ### Running the Application
-
-To run the backend and frontend, follow these steps:
-
 
 1. **Run the backend:**
     ```sh
@@ -81,11 +123,58 @@ To run the backend and frontend, follow these steps:
 
     ![alt text](images/image.png)
 
-## Architectural Design
+## Class Diagram
+![alt text](images/classDiagram.png)
+
+## Class Diagram Description
+
+This class diagram represents the structure and relationships between the main entities, DTOs, repositories, and resources in the project.
+
+### Entities
+
+- **Post**: Represents a social media post in the application, with fields for content, creation date, a reference to the `User` who created the post, and an optional `Stream` to which the post belongs.
+- **User**: Represents a user in the application, identified by a unique `username`.
+- **Stream**: Represents a thread or topic to which posts can belong. Each stream has a unique title and a list of associated posts.
+
+### Data Transfer Objects (DTOs)
+
+- **PostDTO**: Simplified representation of a `Post` used for data transfer. Includes content, the username of the post creator, and the title of the stream (if applicable).
+- **StreamDTO**: Simplified representation of a `Stream`, containing the stream's ID and title.
+
+### Repositories
+
+Each entity has a corresponding repository to manage database operations:
+
+- **PostRepository**: Manages CRUD operations for `Post` entities.
+- **UserRepository**: Manages CRUD operations for `User` entities.
+- **StreamRepository**: Manages CRUD operations for `Stream` entities.
+
+### Resources
+
+RESTful resources provide endpoints to access and manipulate each entity:
+
+- **PostResource**: Provides endpoints to retrieve all posts and create new ones. Uses `PostDTO` to transfer post data.
+- **StreamResource**: Provides endpoints to list all streams and create new ones, using `StreamDTO`.
+- **UserResource**: Provides endpoints to list all users and create new ones.
+
+### Relationships
+
+- **Associations**:
+  - `Post` references a `User` as the post creator.
+  - `Post` may belong to a `Stream`, representing a thread or topic.
+  - `Stream` maintains a list of associated posts.
+
+- **Dependencies**:
+  - Each `Resource` class depends on its respective repository for data management.
+  - `DTO` classes (`PostDTO` and `StreamDTO`) are used to simplify the data structure sent to clients.
+
+This structure allows for clear separation of responsibilities, with resources handling RESTful endpoints, repositories managing persistence, and DTOs providing a simplified data transfer format.
+
+## Architectural Diagram
 
 ![images/imageAWS.png](images/imageAWS.png)
 
-## Diagram Description
+## Architectural Diagram Description
 
 - **Frontend (JavaScript + HTML on S3)**: The web interface of the application, deployed on S3, communicates with the backend through the API Gateway using `fetch` in JavaScript. The interface allows users to create and view posts.
 

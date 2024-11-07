@@ -21,6 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * REST API resource for managing posts.
+ * Provides endpoints for creating and retrieving posts in the application.
+ */
 @Path("/posts")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -35,25 +39,39 @@ public class PostResource {
     @Inject
     StreamRepository streamRepository;
 
-    // Clase auxiliar para recibir el payload con username y contenido
+    /**
+     * Auxiliary class for handling post creation requests.
+     * Contains fields for username, content, and stream title.
+     */
     public static class PostRequest {
         public String username;
-        public String contenido;
+        public String content;
         public String streamTitle;
     }
 
+    /**
+     * Retrieves a list of all posts, returning a simplified view with PostDTO objects.
+     *
+     * @return a list of PostDTOs containing the content, username, and stream title for each post
+     */
     @GET
     public List<PostDTO> list() {
         return postRepository.listAll().stream()
-            .map(post -> new PostDTO(post.getContenido(), post.getUser().getUsername(), post.getStream().getTitulo()))
+            .map(post -> new PostDTO(post.getContent(), post.getUser().getUsername(), post.getStream().getTitle()))
             .collect(Collectors.toList());
     }
 
-    
+    /**
+     * Creates a new post based on the provided request data.
+     * Validates the presence of content and stream title, and checks if the user and stream exist.
+     *
+     * @param request the request containing username, content, and stream title
+     * @return a Response indicating success or failure of post creation
+     */
     @POST
     @Transactional
     public Response create(PostRequest request) {
-        if (request.contenido == null || request.contenido.isBlank()) {
+        if (request.content == null || request.content.isBlank()) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("El contenido del post no puede estar vacío")
                     .build();
@@ -73,7 +91,7 @@ public class PostResource {
                     .entity(errorResponse)
                     .build();
         }
-        Stream stream = streamRepository.find("titulo", request.streamTitle).firstResult();
+        Stream stream = streamRepository.find("title", request.streamTitle).firstResult();
         if (stream == null) {
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "El hilo no existe");
@@ -84,15 +102,14 @@ public class PostResource {
 
 
         Post post = new Post();
-        post.setContenido(request.contenido);
+        post.setContent(request.content);
         post.setUser(user);
         post.setStream(stream);
-        post.setFechaCreacion(LocalDateTime.now());
+        post.setCreationDate(LocalDateTime.now());
         postRepository.persist(post);
 
-        PostDTO responseDTO = new PostDTO(user.getUsername(), post.getContenido(), stream.getTitulo());
+        PostDTO responseDTO = new PostDTO(user.getUsername(), post.getContent(), stream.getTitle());
 
-        System.out.println("Todo ok");
         return Response.status(Response.Status.CREATED)
                 .entity(responseDTO)
                 .build();
